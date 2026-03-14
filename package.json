@@ -1,0 +1,19 @@
+{
+  "name": "cyber",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Cyber monorepo — Admin + Mobile + Server",
+  "scripts": {
+    "dev": "pnpm --parallel -r --filter=cyber-admin --filter=cyber-mobile --filter=cyber-server dev",
+    "dev:admin": "pnpm --filter=cyber-admin dev",
+    "dev:mobile": "pnpm --filter=cyber-mobile dev:h5",
+    "dev:server": "pnpm --filter=cyber-server dev",
+    "build": "pnpm --filter=cyber-admin build && pnpm --filter=cyber-mobile build:h5",
+    "lint": "pnpm -r --parallel lint",
+    "install:all": "pnpm install"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
+  }
+}

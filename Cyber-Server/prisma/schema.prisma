@@ -1,0 +1,305 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────── 部门表 ─────────
+model Department {
+  id         Int          @id @default(autoincrement())
+  parentId   Int          @default(0) @map("parent_id")
+  name       String       @db.VarChar(100)
+  sort       Int          @default(0)
+  status     Boolean      @default(true)
+  createTime DateTime     @default(now()) @map("create_time")
+
+  users      User[]
+
+  @@map("departments")
+}
+
+// ───────── 用户表 ─────────
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(100)
+  email     String?  @unique @db.VarChar(100)
+  phone     String?  @db.VarChar(20)
+  status    Boolean  @default(true)
+  createTime DateTime @default(now()) @map("create_time")
+  updateTime DateTime @updatedAt @map("update_time")
+
+  // 所属部门（可选）
+  deptId    Int?     @map("dept_id")
+  dept      Department? @relation(fields: [deptId], references: [id], onDelete: SetNull)
+
+  // 多对多：用户-角色
+  userRoles UserRole[]
+
+  // 示例表数据（与 /api/v1/tables 对应）
+  tableItems TableItem[]
+
+  @@map("users")
+}
+
+// ───────── 角色表 ─────────
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)  // e.g. "admin", "editor"
+  label     String   @db.VarChar(100)          // 显示名，e.g. "管理员"
+  status    Boolean  @default(true)
+  createTime DateTime @default(now()) @map("create_time")
+
+  userRoles  UserRole[]
+  roleMenus  RoleMenu[]
+
+  @@map("roles")
+}
+
+// ───────── 用户-角色 中间表 ─────────
+model UserRole {
+  userId Int @map("user_id")
+  roleId Int @map("role_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+// ───────── 菜单/权限表 ─────────
+// type: 1=目录 2=菜单 3=按钮/权限
+model Menu {
+  id         Int      @id @default(autoincrement())
+  parentId   Int      @default(0) @map("parent_id")
+  name       String   @db.VarChar(100)
+  type       Int      // 1 | 2 | 3
+  path       String   @default("") @db.VarChar(200)
+  component  String   @default("") @db.VarChar(200)
+  permission String   @default("") @db.VarChar(100)
+  icon       String   @default("") @db.VarChar(100)
+  sort       Int      @default(0)
+  status     Boolean  @default(true)
+  visible    Boolean  @default(true)
+  createTime DateTime @default(now()) @map("create_time")
+
+  roleMenus  RoleMenu[]
+
+  @@map("menus")
+}
+
+// ───────── 角色-菜单 中间表 ─────────
+model RoleMenu {
+  roleId Int @map("role_id")
+  menuId Int @map("menu_id")
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  menu Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, menuId])
+  @@map("role_menus")
+}
+
+// ───────── 商品分类表 ─────────
+model Category {
+  id         Int        @id @default(autoincrement())
+  parentId   Int        @default(0) @map("parent_id")
+  name       String     @db.VarChar(100)
+  sort       Int        @default(0)
+  status     Boolean    @default(true)
+  createTime DateTime   @default(now()) @map("create_time")
+
+  products   Product[]
+
+  @@map("categories")
+}
+
+// ───────── 运费模板表 ─────────
+// type: 0=固定运费
+model FreightTemplate {
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(200)
+  type            Int       @default(0)                        // 0=fixed
+  basePrice       Decimal   @db.Decimal(10, 2)                 @map("base_price")
+  freeThreshold   Decimal?  @db.Decimal(10, 2)                 @map("free_threshold")
+  rules           String    @default("[]") @db.VarChar(2000)            // JSON: [{province,addPrice}]
+  excludedRegions String    @default("[]") @db.VarChar(2000)   @map("excluded_regions")  // JSON: string[]
+  status          Boolean   @default(true)
+  createTime      DateTime  @default(now()) @map("create_time")
+
+  products        Product[]
+
+  @@map("freight_templates")
+}
+
+// ───────── 商品表 ─────────
+model Product {
+  id                Int              @id @default(autoincrement())
+  name              String           @db.VarChar(200)
+  categoryId        Int?             @map("category_id")
+  category          Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  freightTemplateId Int?             @map("freight_template_id")
+  freightTemplate   FreightTemplate? @relation(fields: [freightTemplateId], references: [id], onDelete: SetNull)
+  images            String           @default("[]") @db.VarChar(2000)
+  description       String?          @db.Text
+  status            Boolean          @default(true)
+  createTime        DateTime         @default(now()) @map("create_time")
+
+  skus        ProductSku[]
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+
+  @@map("products")
+}
+
+// ───────── 商品 SKU 表 ─────────
+model ProductSku {
+  id        Int      @id @default(autoincrement())
+  productId Int      @map("product_id")
+  name      String   @db.VarChar(200)   // 规格名，如 "红色/XL"
+  price     Decimal  @db.Decimal(10, 2)
+  stock     Int      @default(0)
+  status    Boolean  @default(true)
+
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+
+  @@map("product_skus")
+}
+
+// ───────── 移动端用户表 ─────────
+model MobileUser {
+  id         Int      @id @default(autoincrement())
+  phone      String   @unique @db.VarChar(20)
+  password   String   @db.VarChar(100)
+  nickname   String   @default("") @db.VarChar(100)
+  avatar     String   @default("") @db.VarChar(500)
+  status     Boolean  @default(true)
+  createTime DateTime @default(now()) @map("create_time")
+
+  orders           Order[]
+  cartItems        CartItem[]
+  shippingAddresses ShippingAddress[]
+  refundRequests   RefundRequest[]
+
+  @@map("mobile_users")
+}
+
+// ───────── 收货地址表 ─────────
+model ShippingAddress {
+  id         Int        @id @default(autoincrement())
+  userId     Int        @map("user_id")
+  user       MobileUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String     @db.VarChar(100)    // 收货人姓名
+  phone      String     @db.VarChar(20)     // 收货人手机
+  province   String     @db.VarChar(100)
+  city       String     @db.VarChar(100)
+  district   String     @db.VarChar(100)
+  detail     String     @db.VarChar(500)    // 详细地址
+  isDefault  Boolean    @default(false) @map("is_default")
+  createTime DateTime   @default(now()) @map("create_time")
+
+  orders     Order[]
+
+  @@map("shipping_addresses")
+}
+
+// ───────── 购物车表（服务端持久化） ─────────
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  productId Int      @map("product_id")
+  skuId     Int      @map("sku_id")
+  quantity  Int      @default(1)
+  createTime DateTime @default(now()) @map("create_time")
+
+  user    MobileUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku     ProductSku @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skuId])
+  @@map("cart_items")
+}
+
+// ───────── 订单表 ─────────
+// status: 0=待付款 1=待发货 2=待收货 3=已完成 4=已取消
+model Order {
+  id                Int              @id @default(autoincrement())
+  orderNo           String           @unique @db.VarChar(50)
+  userId            Int              @map("user_id")
+  user              MobileUser       @relation(fields: [userId], references: [id])
+  totalAmount       Decimal          @db.Decimal(10, 2)
+  status            Int              @default(0)
+  address           String           @default("") @db.VarChar(500)   // 保留旧字段，兼容存量
+  shippingAddressId Int?             @map("shipping_address_id")
+  shippingAddress   ShippingAddress? @relation(fields: [shippingAddressId], references: [id], onDelete: SetNull)
+  addressSnapshot   String?          @db.Text @map("address_snapshot")  // JSON 快照
+  remark            String?          @db.VarChar(500)
+  shipmentNo        String?          @db.VarChar(100) @map("shipment_no")
+  shippingCompany   String?          @db.VarChar(100) @map("shipping_company")
+  shippedAt         DateTime?        @map("shipped_at")
+  createTime        DateTime         @default(now()) @map("create_time")
+
+  items       OrderItem[]
+  refund      RefundRequest?
+
+  @@map("orders")
+}
+
+// ───────── 订单项表 ─────────
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int     @map("order_id")
+  productId Int     @map("product_id")
+  skuId     Int?    @map("sku_id")
+  skuName   String  @default("") @db.VarChar(200)  // SKU 规格名快照
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+
+  order   Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product    @relation(fields: [productId], references: [id])
+  sku     ProductSku? @relation(fields: [skuId], references: [id])
+
+  @@map("order_items")
+}
+
+// ───────── 退款申请表 ─────────
+// status: 0=待审核 1=已批准 2=已拒绝
+model RefundRequest {
+  id         Int        @id @default(autoincrement())
+  orderId    Int        @unique @map("order_id")
+  userId     Int        @map("user_id")
+  reason     String     @db.VarChar(500)
+  status     Int        @default(0)             // 0=PENDING 1=APPROVED 2=REJECTED
+  adminNote  String?    @db.VarChar(500)         @map("admin_note")
+  createTime DateTime   @default(now())          @map("create_time")
+  updateTime DateTime   @updatedAt               @map("update_time")
+
+  order Order      @relation(fields: [orderId], references: [id])
+  user  MobileUser @relation(fields: [userId], references: [id])
+
+  @@map("refund_requests")
+}
+model TableItem {
+  id         Int      @id @default(autoincrement())
+  username   String   @db.VarChar(100)
+  email      String   @db.VarChar(100)
+  phone      String   @db.VarChar(30)
+  roles      String   @default("editor") @db.VarChar(50)
+  status     Boolean  @default(true)
+  createTime DateTime @default(now()) @map("create_time")
+
+  // 可选：关联用户（示例表数据属于哪个用户账号）
+  userId     Int?     @map("user_id")
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("table_items")
+}
