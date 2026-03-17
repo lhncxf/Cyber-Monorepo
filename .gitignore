@@ -1,0 +1,26 @@
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# Root-level node_modules (pnpm workspace)
+node_modules
+
+# AI tools
+.cursor
+.trae
+.windsurf
+.copilot
+.continue
+.aider*
+.claude
+*.cursorrules
+AGENTS.md
+
+# Editor
+.idea
+.vscode
+
+# Env files with secrets (subprojects have their own)
+# Note: Cyber-Server/.env is kept for local dev convenience

@@ -1,0 +1,32 @@
+// ─── classic（传统电商橙红经典）主题变量 ────────────────────────────────────────
+//
+// 调色盘参考传统电商平台（淘宝/京东）橙红经典风格：
+//   品牌主色  #ff4400  活力橙红
+//   强调色    #ff6600  暖橙
+//   背景      #f5f5f5  浅灰底
+//   面板/卡片 #ffffff  纯白
+//   侧边栏    #2b2b2b  深炭灰（沉稳）
+//   边框      #e8e8e8  标准灰边框
+//   主文字    #333333
+//   次级文字  #666666
+//   弱化文字  #999999
+
+// 主题名称（对应 html 上挂载的 class）
+$theme-name: "classic";
+
+// 主题基础背景色（用于 handle-button 等 SCSS 计算场景）
+$theme-bg-color: #f5f5f5;
+
+// ─── 品牌色板（供本文件内引用）──────────────────────────────────────────────────
+$brand-primary: #ff4400;
+$brand-accent: #ff6600;
+$brand-bg: #f5f5f5;
+$brand-surface: #ffffff;
+$brand-sidebar-bg: #2b2b2b;
+$brand-sidebar-hover: #3d3d3d;
+$brand-sidebar-active: #ff4400;
+$brand-border: #e8e8e8;
+$brand-border-strong: #d0d0d0;
+$brand-text-primary: #333333;
+$brand-text-secondary: #666666;
+$brand-text-muted: #999999;

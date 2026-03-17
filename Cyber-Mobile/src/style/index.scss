@@ -1,0 +1,39 @@
+// 测试用的 iconfont，可生效
+// @import './iconfont.css';
+
+.test {
+  // 可以通过 @apply 多个样式封装整体样式
+  @apply mt-4 ml-4;
+
+  padding-top: 4px;
+  color: red;
+}
+
+:root {
+  --brand-primary: #1a1a1a;
+  --brand-accent: #c0392b;
+  --brand-bg: #fafaf8;
+  --brand-surface: #ffffff;
+  --brand-border: #f0ece6;
+  --brand-text-primary: #1a1a1a;
+  --brand-text-secondary: #6b6b6b;
+  --brand-text-muted: #a0a0a0;
+
+  --wot-color-theme: var(--brand-primary);
+}
+
+page {
+  background-color: var(--brand-bg);
+}
+
+// uni-app button 全局重置：消除 H5 端 ::after 伪元素边框导致的"四角缺角"问题
+// uni-app button 在 H5 会用 ::after 绘制一个 2x scale 的边框，圆角不跟随 class 继承
+button {
+  border: none;
+  background-color: transparent;
+
+  &::after {
+    border-radius: inherit !important;
+    border: none !important;
+  }
+}

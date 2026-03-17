@@ -1,0 +1,46 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+
+# MacOS
+.DS_Store
+
+# Build output
+dist
+
+# Local env files
+*.local
+
+# Editor
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Lint cache
+.eslintcache
+
+# Prisma generated client (regenerated via postinstall)
+# prisma/migrations is kept in version control
+
+# AI tools
+.cursor
+.trae
+.windsurf
+.copilot
+.continue
+.aider*
+.claude
+*.cursorrules
+AGENTS.md

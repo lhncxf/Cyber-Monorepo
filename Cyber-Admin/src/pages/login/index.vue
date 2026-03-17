@@ -1,0 +1,201 @@
+<script lang="ts" setup>
+import type { FormRules } from "element-plus"
+import type { LoginRequestData } from "./apis/type"
+import ThemeSwitch from "@@/components/ThemeSwitch/index.vue"
+import { Key, Loading, Lock, Picture, User } from "@element-plus/icons-vue"
+import { useSettingsStore } from "@/pinia/stores/settings"
+import { useUserStore } from "@/pinia/stores/user"
+import { getCaptchaApi, loginApi } from "./apis"
+import Owl from "./components/Owl.vue"
+import { useFocus } from "./composables/useFocus"
+
+const route = useRoute()
+
+const router = useRouter()
+
+const userStore = useUserStore()
+
+const settingsStore = useSettingsStore()
+
+const { t } = useI18n()
+
+const { isFocus, handleBlur, handleFocus } = useFocus()
+
+const loginFormRef = useTemplateRef("loginFormRef")
+
+const loading = ref(false)
+
+const codeUrl = ref("")
+
+const loginFormData: LoginRequestData = reactive({
+  username: "admin",
+  password: "admin123",
+  code: "",
+  captchaToken: ""
+})
+
+const loginFormRules = computed<FormRules>(() => ({
+  username: [
+    { required: true, message: t("login.usernameRequired"), trigger: "blur" }
+  ],
+  password: [
+    { required: true, message: t("login.passwordRequired"), trigger: "blur" },
+    { min: 8, max: 16, message: t("login.passwordLength"), trigger: "blur" }
+  ],
+  code: [
+    { required: true, message: t("login.captchaRequired"), trigger: "blur" }
+  ]
+}))
+
+function handleLogin() {
+  loginFormRef.value?.validate((valid) => {
+    if (!valid) {
+      ElMessage.error(t("login.formInvalid"))
+      return
+    }
+    loading.value = true
+    loginApi(loginFormData).then(({ data }) => {
+      userStore.setToken(data.token)
+      router.push(route.query.redirect ? decodeURIComponent(route.query.redirect as string) : "/")
+    }).catch(() => {
+      createCode()
+      loginFormData.password = ""
+    }).finally(() => {
+      loading.value = false
+    })
+  })
+}
+
+function createCode() {
+  loginFormData.code = ""
+  codeUrl.value = ""
+  getCaptchaApi().then((res) => {
+    codeUrl.value = res.data.svg
+    loginFormData.captchaToken = res.data.captchaToken
+  })
+}
+
+createCode()
+</script>
+
+<template>
+  <div class="login-container">
+    <ThemeSwitch v-if="settingsStore.showThemeSwitch" class="theme-switch" />
+    <Owl :close-eyes="isFocus" />
+    <div class="login-card">
+      <div class="title">
+        <img src="@@/assets/images/layouts/logo-text-2.png">
+      </div>
+      <div class="content">
+        <el-form ref="loginFormRef" :model="loginFormData" :rules="loginFormRules" @keyup.enter="handleLogin">
+          <el-form-item prop="username">
+            <el-input
+              v-model.trim="loginFormData.username"
+              :placeholder="t('login.username')"
+              type="text"
+              tabindex="1"
+              :prefix-icon="User"
+              size="large"
+            />
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+              v-model.trim="loginFormData.password"
+              :placeholder="t('login.password')"
+              type="password"
+              tabindex="2"
+              :prefix-icon="Lock"
+              size="large"
+              show-password
+              @blur="handleBlur"
+              @focus="handleFocus"
+            />
+          </el-form-item>
+          <el-form-item prop="code">
+            <el-input
+              v-model.trim="loginFormData.code"
+              :placeholder="t('login.captcha')"
+              type="text"
+              tabindex="3"
+              :prefix-icon="Key"
+              size="large"
+              @blur="handleBlur"
+              @focus="handleFocus"
+            >
+              <template #append>
+                <el-image :src="codeUrl" draggable="false" @click="createCode">
+                  <template #placeholder>
+                    <el-icon>
+                      <Picture />
+                    </el-icon>
+                  </template>
+                  <template #error>
+                    <el-icon>
+                      <Loading />
+                    </el-icon>
+                  </template>
+                </el-image>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">
+            {{ t("login.loginBtn") }}
+          </el-button>
+        </el-form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100%;
+  .theme-switch {
+    position: fixed;
+    top: 5%;
+    right: 5%;
+    cursor: pointer;
+  }
+  .login-card {
+    width: 480px;
+    max-width: 90%;
+    border-radius: 20px;
+    box-shadow: 0 0 10px #dcdfe6;
+    background-color: var(--el-bg-color);
+    overflow: hidden;
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+      img {
+        height: 100%;
+      }
+    }
+    .content {
+      padding: 20px 50px 50px 50px;
+      :deep(.el-input-group__append) {
+        padding: 0;
+        overflow: hidden;
+        .el-image {
+          width: 100px;
+          height: 40px;
+          border-left: 0px;
+          user-select: none;
+          cursor: pointer;
+          text-align: center;
+        }
+      }
+      .el-button {
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+</style>

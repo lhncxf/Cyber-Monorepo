@@ -1,0 +1,28 @@
+// ─── light（现代简约品牌）主题变量 ─────────────────────────────────────────────
+//
+// 调色盘与 CyberMobile 保持一致：
+//   品牌主色  #1a1a1a  近黑
+//   强调色    #c0392b  砖红
+//   背景      #fafaf8  暖米白
+//   面板/卡片 #ffffff  纯白
+//   边框      #f0ece6  暖米色
+//   主文字    #1a1a1a
+//   次级文字  #6b6b6b
+//   弱化文字  #a0a0a0
+
+// 主题名称（对应 html 上挂载的 class）
+$theme-name: "light";
+
+// 主题基础背景色（用于 handle-button 等 SCSS 计算场景）
+$theme-bg-color: #fafaf8;
+
+// ─── 品牌色板（供本文件内引用）──────────────────────────────────────────────────
+$brand-primary: #1a1a1a;
+$brand-accent: #c0392b;
+$brand-bg: #fafaf8;
+$brand-surface: #ffffff;
+$brand-border: #f0ece6;
+$brand-border-strong: #e0d8d0;
+$brand-text-primary: #1a1a1a;
+$brand-text-secondary: #6b6b6b;
+$brand-text-muted: #a0a0a0;

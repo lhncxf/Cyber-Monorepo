@@ -1,0 +1,17 @@
+@import "./variables.scss";
+@import "../core/index.scss";
+
+html.#{$theme-name} {
+  --el-color-primary: #{$brand-primary};
+  --el-color-primary-light-3: #{$brand-primary-light3};
+  --el-color-primary-light-5: #{$brand-primary-light5};
+  --el-color-primary-light-7: #{$brand-primary-light7};
+  --el-color-primary-light-8: #{$brand-primary-light8};
+  --el-color-primary-light-9: #{$brand-primary-light9};
+  --el-color-primary-dark-2: #{$brand-primary-dark2};
+
+  --v3-sidebar-menu-tip-line-bg-color: #{$brand-primary};
+  --v3-tagsview-tag-active-bg-color: #{$brand-primary};
+  --v3-tagsview-tag-active-border-color: #{$brand-primary};
+  --v3-rightpanel-button-bg-color: #{$brand-primary};
+}

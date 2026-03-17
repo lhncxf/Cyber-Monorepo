@@ -1,0 +1,38 @@
+# Common
+dist
+node_modules
+.eslintcache
+vite.config.*.timestamp*
+
+# MacOS
+.DS_Store
+
+# Local env files
+*.local
+
+# Logs
+*.log
+
+# Use pnpm only
+package-lock.json
+yarn.lock
+
+# Editor
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# AI tools
+.cursor
+.trae
+.windsurf
+.copilot
+.continue
+.aider*
+.claude
+*.cursorrules
+AGENTS.md

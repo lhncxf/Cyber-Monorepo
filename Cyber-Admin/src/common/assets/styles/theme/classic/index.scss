@@ -1,0 +1,206 @@
+@import "./variables.scss";
+
+// ─── classic 主题：Element Plus CSS 变量覆盖 ──────────────────────────────────
+//
+// 传统电商橙红经典风格：
+//   - 主色调橙红 #ff4400，延续淘宝/京东活力感
+//   - 侧边栏深炭灰，内容区浅灰底纯白卡片
+//   - 标准圆角（4px），清晰边框，高可读性
+
+.#{$theme-name} {
+  // ── Element Plus 基础色 ──────────────────────────────────────────────────────
+  --el-color-primary: #{$brand-primary};
+  --el-color-primary-light-3: #ff6633;
+  --el-color-primary-light-5: #ff7755;
+  --el-color-primary-light-7: #ffaa88;
+  --el-color-primary-light-8: #ffccbb;
+  --el-color-primary-light-9: #fff0eb;
+  --el-color-primary-dark-2: #cc3300;
+
+  // ── 语义色 ───────────────────────────────────────────────────────────────────
+  --el-color-danger: #e02020;
+  --el-color-danger-light-3: #e84444;
+  --el-color-danger-light-5: #ed6666;
+  --el-color-danger-light-7: #f49999;
+  --el-color-danger-light-8: #f9bbbb;
+  --el-color-danger-light-9: #fde8e8;
+  --el-color-danger-dark-2: #b01a1a;
+
+  --el-color-warning: #ff8800;
+  --el-color-warning-light-3: #ffa033;
+  --el-color-warning-light-5: #ffb366;
+  --el-color-warning-light-7: #ffcc99;
+  --el-color-warning-light-8: #ffdebb;
+  --el-color-warning-light-9: #fff3e0;
+  --el-color-warning-dark-2: #cc6e00;
+
+  --el-color-success: #52c41a;
+  --el-color-success-light-3: #73cf47;
+  --el-color-success-light-5: #8dd96d;
+  --el-color-success-light-7: #b2e59a;
+  --el-color-success-light-8: #c9edba;
+  --el-color-success-light-9: #e8f8df;
+  --el-color-success-dark-2: #3d9413;
+
+  // ── 背景色 ──────────────────────────────────────────────────────────────────
+  --el-bg-color: #{$brand-surface};
+  --el-bg-color-page: #{$brand-bg};
+  --el-bg-color-overlay: #{$brand-surface};
+
+  // ── 文字色 ──────────────────────────────────────────────────────────────────
+  --el-text-color-primary: #{$brand-text-primary};
+  --el-text-color-regular: #{$brand-text-secondary};
+  --el-text-color-secondary: #{$brand-text-secondary};
+  --el-text-color-placeholder: #{$brand-text-muted};
+  --el-text-color-disabled: #{$brand-text-muted};
+
+  // ── 边框色 ──────────────────────────────────────────────────────────────────
+  --el-border-color: #{$brand-border-strong};
+  --el-border-color-light: #{$brand-border};
+  --el-border-color-lighter: #{$brand-border};
+  --el-border-color-extra-light: #f0f0f0;
+
+  // ── 填充色 ──────────────────────────────────────────────────────────────────
+  --el-fill-color: #{$brand-border};
+  --el-fill-color-light: #{$brand-bg};
+  --el-fill-color-lighter: #{$brand-bg};
+  --el-fill-color-extra-light: #fafafa;
+  --el-fill-color-blank: #{$brand-surface};
+
+  // ── 阴影 ────────────────────────────────────────────────────────────────────
+  --el-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  --el-box-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --el-box-shadow-lighter: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --el-box-shadow-dark: 0 4px 16px rgba(0, 0, 0, 0.14);
+
+  // ── 圆角（传统风格偏标准，保持4px整洁） ──────────────────────────────────────
+  --el-border-radius-base: 4px;
+  --el-border-radius-small: 2px;
+  --el-border-radius-round: 16px;
+
+  // ── Layout 自定义变量（对应 variables.css） ───────────────────────────────────
+  --v3-header-bg-color: #{$brand-surface};
+  --v3-header-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --v3-header-border-bottom: 1px solid #{$brand-border};
+  --v3-navigationbar-text-color: #{$brand-text-secondary};
+
+  // Sidebar — 深炭灰侧边栏，橙红高亮激活项
+  --v3-sidebar-border-right: none;
+  --v3-sidebar-menu-bg-color: #{$brand-sidebar-bg};
+  --v3-sidebar-menu-hover-bg-color: #{$brand-sidebar-hover};
+  --v3-sidebar-menu-text-color: #cccccc;
+  --v3-sidebar-menu-active-text-color: #ffffff;
+  --v3-sidebar-menu-tip-line-bg-color: #{$brand-primary};
+
+  // TagsView — 标签栏橙红激活
+  --v3-tagsview-text-color: #{$brand-text-secondary};
+  --v3-tagsview-tag-bg-color: #{$brand-surface};
+  --v3-tagsview-tag-active-bg-color: #{$brand-primary};
+  --v3-tagsview-tag-active-text-color: #ffffff;
+  --v3-tagsview-tag-border-color: #{$brand-border};
+  --v3-tagsview-tag-active-border-color: #{$brand-primary};
+  --v3-tagsview-tag-border-radius: 2px;
+  --v3-tagsview-tag-icon-hover-bg-color: rgba(0, 0, 0, 0.2);
+  --v3-tagsview-tag-icon-hover-color: #ffffff;
+  --v3-tagsview-contextmenu-text-color: #{$brand-text-secondary};
+  --v3-tagsview-contextmenu-hover-text-color: #{$brand-text-primary};
+  --v3-tagsview-contextmenu-bg-color: #{$brand-surface};
+  --v3-tagsview-contextmenu-hover-bg-color: #{$brand-bg};
+  --v3-tagsview-contextmenu-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+
+  // Hamburger
+  --v3-hamburger-text-color: #{$brand-text-primary};
+
+  // RightPanel 设置按钮 — 与侧边栏同色系
+  --v3-rightpanel-button-bg-color: #{$brand-primary};
+
+  // ── Body 背景 ────────────────────────────────────────────────────────────────
+  --v3-body-text-color: #{$brand-text-primary};
+  --v3-body-bg-color: #{$brand-bg};
+
+  // ── 叠加菜单（popper 中的侧边栏子菜单） ──────────────────────────────────────
+  .el-popper {
+    .el-menu {
+      background-color: #{$brand-sidebar-bg};
+
+      .el-menu-item {
+        background-color: #{$brand-sidebar-bg};
+        color: #cccccc;
+
+        &.is-active,
+        &:hover {
+          background-color: #{$brand-sidebar-active};
+          color: #ffffff;
+        }
+      }
+
+      .el-sub-menu__title {
+        background-color: #{$brand-sidebar-bg};
+        color: #cccccc;
+      }
+
+      .el-sub-menu {
+        &.is-active > .el-sub-menu__title {
+          color: #{$brand-accent};
+        }
+      }
+    }
+
+    .el-menu--horizontal {
+      border: none;
+    }
+  }
+
+  // ── Sidebar 菜单（左侧模式，.app-wrapper 内） ─────────────────────────────────
+  .app-wrapper {
+    .sidebar-container {
+      background-color: #{$brand-sidebar-bg};
+      border-right: none;
+
+      .el-menu {
+        background-color: #{$brand-sidebar-bg};
+        border-right: none;
+
+        .el-menu-item {
+          background-color: #{$brand-sidebar-bg};
+          color: #cccccc;
+          transition:
+            background-color 0.2s,
+            color 0.2s;
+
+          &:hover {
+            background-color: #{$brand-sidebar-hover};
+            color: #ffffff;
+          }
+
+          &.is-active {
+            background-color: #{$brand-sidebar-active};
+            color: #ffffff;
+            font-weight: 600;
+          }
+        }
+
+        .el-sub-menu__title {
+          background-color: #{$brand-sidebar-bg};
+          color: #cccccc;
+
+          &:hover {
+            background-color: #{$brand-sidebar-hover};
+            color: #ffffff;
+          }
+        }
+
+        .el-sub-menu {
+          &.is-active > .el-sub-menu__title {
+            color: #{$brand-accent};
+          }
+        }
+      }
+    }
+  }
+
+  // ── 右侧设置面板触发按钮 ───────────────────────────────────────────────────────
+  .handle-button {
+    background-color: #{$brand-primary} !important;
+  }
+}
